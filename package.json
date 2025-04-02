@@ -2,12 +2,11 @@
   "name": "travel",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "start": "node dist/index.js",
-    "dev": "nodemon server.ts",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+"scripts": {
+  "start": "node dist/server.js",
+  "dev": "nodemon server.ts",
+  "build": "tsc"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

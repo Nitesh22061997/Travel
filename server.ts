@@ -22,7 +22,7 @@ process.on("SIGINT", () => {
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Database connection
 connectDB();
@@ -31,13 +31,15 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use("/", router);
-
+// Define root route before mounting router
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
+
+// Mount router for other routes
+app.use("/api", router); // Changed from "/" to "/api"
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
