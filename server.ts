@@ -5,6 +5,8 @@ import router from "./routes/index";
 import connectDB from "./config/db";
 import mongoose from "mongoose";
 
+import upload from "./config/multer";
+
 process.on("SIGINT", () => {
   mongoose.connection
     .close()

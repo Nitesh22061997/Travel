@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { registerUser, loginUser } from "../services/authService";
-
+import Visa from "../models/user/visaModel";
 // User Registration
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -17,7 +17,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const result = await loginUser(email, password);
-    res.status(200).json(result);
+    res.status(200).json({ result, message: "Login successful" });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
