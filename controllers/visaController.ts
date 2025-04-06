@@ -58,9 +58,15 @@ export const getAllVisas = async (
 ): Promise<void> => {
   try {
     const visas = await Visa.find();
-    res.status(200).json(visas);
+    res.status(200).json({
+      message: "All visa entries",
+      visas,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching visa data", error });
+    res.status(500).json({
+      message: "Error fetching visa data",
+      error,
+    });
   }
 };
 
