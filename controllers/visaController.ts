@@ -1,23 +1,37 @@
 import { Request, Response } from "express";
 import Visa from "../models/user/visaModel";
 
-// Create a new visa entry with image upload
+// Helper to safely construct the prices object with default values
+const constructPrices = (body: any) => {
+  return {
+    adult: {
+      "30_days": Number(body.adult_30_days) || 0,
+      "60_days": Number(body.adult_60_days) || 0,
+      "90_days": Number(body.adult_90_days) || 0,
+      "180_days": Number(body.adult_180_days) || 0,
+    },
+    children: {
+      "30_days": Number(body.children_30_days) || 0,
+      "60_days": Number(body.children_60_days) || 0,
+      "90_days": Number(body.children_90_days) || 0,
+      "180_days": Number(body.children_180_days) || 0,
+    },
+    common: {
+      "14_days": Number(body.common_14_days) || 0,
+      "16_days": Number(body.common_16_days) || 0,
+    },
+  };
+};
+
+// Create a new visa entry
 export const createVisa = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      country,
-      description,
-      countryVisaPrice,
-      adult_30_days,
-      adult_60_days,
-      children_30_days,
-      children_60_days,
-    } = req.body;
-
+    const { country, description, countryVisaPrice } = req.body;
     const image = req.file?.path;
+
     if (!image) {
       res.status(400).json({ message: "Image upload failed" });
       return;
@@ -28,16 +42,7 @@ export const createVisa = async (
       image,
       description,
       countryVisaPrice,
-      prices: {
-        adult: {
-          "30_days": Number(adult_30_days),
-          "60_days": Number(adult_60_days),
-        },
-        children: {
-          "30_days": Number(children_30_days),
-          "60_days": Number(children_60_days),
-        },
-      },
+      prices: constructPrices(req.body),
     });
 
     await newVisa.save();
@@ -47,10 +52,6 @@ export const createVisa = async (
   }
 };
 
-export const hi = async (req: any, res: any) => {
-  return res.status(200).json({ message: "Hello from the server!" });
-};
-
 // Get all visa entries
 export const getAllVisas = async (
   _req: Request,
@@ -58,15 +59,9 @@ export const getAllVisas = async (
 ): Promise<void> => {
   try {
     const visas = await Visa.find();
-    res.status(200).json({
-      message: "All visa entries",
-      visas,
-    });
+    res.status(200).json({ message: "All visa entries", visas });
   } catch (error) {
-    res.status(500).json({
-      message: "Error fetching visa data",
-      error,
-    });
+    res.status(500).json({ message: "Error fetching visa data", error });
   }
 };
 
@@ -90,17 +85,23 @@ export const getVisaByCountry = async (
   }
 };
 
-// Update visa entry with new image
+// Update visa entry
 export const updateVisa = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { country } = req.params;
-    const updateData = { ...req.body };
+    const { description, countryVisaPrice } = req.body;
+
+    const updateData: any = {
+      ...(description && { description }),
+      ...(countryVisaPrice && { countryVisaPrice }),
+      prices: constructPrices(req.body),
+    };
 
     if (req.file) {
-      updateData.image = req.file.path; // Update Cloudinary image
+      updateData.image = req.file.path;
     }
 
     const updatedVisa = await Visa.findOneAndUpdate({ country }, updateData, {
@@ -136,4 +137,9 @@ export const deleteVisa = async (
   } catch (error) {
     res.status(500).json({ message: "Error deleting visa data", error });
   }
+};
+
+// Simple test endpoint
+export const hi = async (_req: Request, res: Response) => {
+  return res.status(200).json({ message: "Hello from the server!" });
 };

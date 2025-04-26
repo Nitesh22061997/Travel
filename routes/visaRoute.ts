@@ -8,6 +8,8 @@ import {
   hi,
 } from "../controllers/visaController";
 import upload from "../config/multer"; // Assuming you have a multer middleware for file uploads
+import { sendUserDetailsRoute } from "../controllers/detailsMail";
+import { createTravelBooking } from "../controllers/travelBookingController";
 const router = express.Router();
 
 router.post(
@@ -24,6 +26,9 @@ router.put(
 );
 router.delete("/delete/:country", deleteVisa);
 
+router.post("/mail", sendUserDetailsRoute);
+
+router.post("/book-travel", createTravelBooking);
 export default router;
 
 // Importing the Visa controller
