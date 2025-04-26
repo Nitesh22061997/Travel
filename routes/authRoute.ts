@@ -1,11 +1,19 @@
 import express from "express";
-import { login, logout, signup } from "../controllers/authController";
+import {
+  login,
+  logout,
+  resendOtp,
+  signup,
+  verifyOtp,
+} from "../controllers/authController";
 const router = express.Router();
 
 router.post("/register", signup);
 router.post("/login", login);
 router.post("/logout", logout);
-// router.post("/refresh");
+router.post("/verify-Otp", verifyOtp);
+router.post("/resend-otp", resendOtp); // Assuming resend-otp uses the same verifyOtp function
+// router.post("/verifyOtp", verifyOtp);
 // router.post("/forgot-password");
 // router.post("/reset-password");
 // router.post("/verify-email");

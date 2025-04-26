@@ -1,18 +1,6 @@
-import mongoose, { Document } from "mongoose";
+const mongoose = require("mongoose");
 
-export interface IUser extends Document {
-  email: string;
-  password: string;
-  //   role: "user" | "admin";
-  status: "active" | "inactive";
-  verificationToken?: string;
-  resetPasswordToken?: string;
-  resetPasswordExpires?: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const UserSchema = new mongoose.Schema<IUser>(
+const UserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -27,15 +15,23 @@ const UserSchema = new mongoose.Schema<IUser>(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
     },
-    // role: {
-    //   type: String,
-    //   enum: ["user", "admin"],
-    //   default: "user",
-    // },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     status: {
       type: String,
       enum: ["active", "inactive"],
-      default: "active",
+      default: "inactive",
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
     },
     verificationToken: {
       type: String,
@@ -53,4 +49,4 @@ const UserSchema = new mongoose.Schema<IUser>(
   { timestamps: true } // Automatically adds `createdAt` and `updatedAt`
 );
 
-export default mongoose.model<IUser>("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

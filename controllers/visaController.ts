@@ -24,10 +24,7 @@ const constructPrices = (body: any) => {
 };
 
 // Create a new visa entry
-export const createVisa = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const createVisa = async (req: any, res: any): Promise<void> => {
   try {
     const { country, description, countryVisaPrice } = req.body;
     const image = req.file?.path;
