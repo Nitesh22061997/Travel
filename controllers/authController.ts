@@ -40,6 +40,13 @@ export const login = async (req: any, res: any) => {
 
     const user = await User.findOne({ email });
 
+    // If user does not exist
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found. Please register first." });
+    }
+
     // Only allow login if user status is 'active'
     if (user && user.status !== "active") {
       return res
