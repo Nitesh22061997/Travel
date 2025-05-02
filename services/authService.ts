@@ -49,14 +49,9 @@ export const registerUser = async (
   };
 };
 
-export const loginUser = async (
-  email: string,
-  password: string,
-  role: string
-) => {
+export const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email });
   if (!user) throw new Error("User not found");
-  if (user.role !== role) throw new Error("Invalid role");
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Invalid credentials");

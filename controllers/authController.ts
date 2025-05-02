@@ -36,7 +36,7 @@ export const signup = async (req: any, res: any) => {
 // User Login
 export const login = async (req: any, res: any) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
 
@@ -47,8 +47,10 @@ export const login = async (req: any, res: any) => {
         .json({ message: "Account is inactive. Please verify OTP first." });
     }
 
-    const result = await loginUser(email, password, role);
-    res.status(200).json({ result, message: "Login successful" });
+    const result = await loginUser(email, password);
+    res
+      .status(200)
+      .json({ result, message: "Login successful", role: user.role });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
@@ -107,11 +109,9 @@ export const verifyOtp = async (req: any, res: any) => {
     user.otpExpiry = null;
     await user.save();
 
-    res
-      .status(200)
-      .json({
-        message: "OTP verified successfully. Your account is now active.",
-      });
+    res.status(200).json({
+      message: "OTP verified successfully. Your account is now active.",
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
